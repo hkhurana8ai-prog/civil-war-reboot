@@ -1,11 +1,13 @@
 import { useState, useCallback } from 'react'
 import { LEVELS, TOTAL_LEVELS, getRank, getInitialState } from './gameData'
+import SplashScreen from './components/SplashScreen'
 import Header from './components/Header'
 import GlitchStage from './components/GlitchStage'
 import DetectiveNotebook from './components/DetectiveNotebook'
 import VictoryScreen from './components/VictoryScreen'
 
 export default function App() {
+  const [started, setStarted] = useState(false)
   const [state, setState] = useState(getInitialState)
 
   const handleLevelSolved = useCallback((levelId, pointsEarned) => {
@@ -16,7 +18,6 @@ export default function App() {
       const newClues = prev.unlockedClues.includes(levelId)
         ? prev.unlockedClues
         : [...prev.unlockedClues, levelId]
-
       const allDone = newSolved.length === TOTAL_LEVELS
 
       return {
@@ -42,16 +43,18 @@ export default function App() {
   }, [])
 
   const handleReplay = useCallback(() => {
-    setState(prev => ({
-      ...getInitialState(),
-      replayMode: true,
-      screen: 'game',
-    }))
+    setState({ ...getInitialState(), replayMode: true, screen: 'game' })
+    setStarted(true)
   }, [])
+
+  if (!started) {
+    return <SplashScreen onStart={() => setStarted(true)} />
+  }
 
   const currentLevelData = LEVELS[state.currentLevel]
   const rank = getRank(state.score)
   const isSolved = state.solvedLevels.includes(currentLevelData.id)
+  const allDone = state.solvedLevels.length === TOTAL_LEVELS
 
   if (state.screen === 'victory') {
     return (
@@ -66,7 +69,7 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white font-mono flex flex-col scanlines relative">
+    <div className="min-h-screen bg-[#0f172a] text-white font-mono flex flex-col" style={{ maxHeight: '100vh' }}>
       <Header
         currentLevel={state.currentLevel}
         totalLevels={TOTAL_LEVELS}
@@ -84,7 +87,7 @@ export default function App() {
           onSolved={(pts) => handleLevelSolved(currentLevelData.id, pts)}
           onNextLevel={handleNextLevel}
           isLastLevel={state.currentLevel === TOTAL_LEVELS - 1}
-          allDone={state.solvedLevels.length === TOTAL_LEVELS}
+          allDone={allDone}
           onViewResults={() => setState(prev => ({ ...prev, screen: 'victory' }))}
         />
         <DetectiveNotebook

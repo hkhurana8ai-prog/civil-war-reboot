@@ -2,90 +2,113 @@ import { useState, useEffect } from 'react'
 import { sounds } from '../sounds'
 
 export default function SplashScreen({ onStart }) {
-  const [visible, setVisible] = useState(false)
   const [blink, setBlink] = useState(true)
+  const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    const t = setTimeout(() => setVisible(true), 100)
-    const b = setInterval(() => setBlink(v => !v), 600)
+    const t = setTimeout(() => setVisible(true), 80)
+    const b = setInterval(() => setBlink(v => !v), 550)
     return () => { clearTimeout(t); clearInterval(b) }
   }, [])
 
-  function handleStart() {
-    sounds.success()
-    onStart()
-  }
-
   return (
-    <div className={`min-h-screen bg-[#0f172a] flex flex-col items-center justify-center font-mono transition-opacity duration-700 ${visible ? 'opacity-100' : 'opacity-0'}`}>
-      {/* Scanlines overlay */}
+    <div
+      className={`min-h-screen bg-[#0f172a] font-mono flex flex-col transition-opacity duration-500 ${visible ? 'opacity-100' : 'opacity-0'}`}
+      style={{
+        background: 'radial-gradient(ellipse at 50% 30%, #0f2040 0%, #0f172a 60%)',
+      }}
+    >
+      {/* Scanline texture */}
       <div className="fixed inset-0 pointer-events-none" style={{
-        background: 'repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 4px)'
+        background: 'repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.04) 3px, rgba(0,0,0,0.04) 6px)',
+        zIndex: 0,
       }} />
 
-      {/* Top label */}
-      <div className="text-[10px] tracking-[0.4em] text-slate-600 mb-6 uppercase">
-        Time Detective Agency — Classified Mission
-      </div>
-
-      {/* Main title */}
-      <div className="relative mb-2 select-none">
-        <h1 className="text-5xl md:text-6xl font-black tracking-widest text-cyan-400 neon-cyan px-2">
-          CIVIL WAR
-        </h1>
-        <h1 className="text-5xl md:text-6xl font-black tracking-widest text-amber-400 neon-gold px-2">
-          REBOOT
-        </h1>
-        {/* Glitch overlay */}
-        <div className="absolute inset-0 animate-glitch pointer-events-none opacity-20 text-red-400">
-          <div className="text-5xl md:text-6xl font-black tracking-widest px-2">CIVIL WAR</div>
-          <div className="text-5xl md:text-6xl font-black tracking-widest px-2">REBOOT</div>
+      <div className="relative z-10 flex flex-col min-h-screen px-8 md:px-16 py-10">
+        {/* Top label */}
+        <div className="text-center text-slate-600 tracking-[0.5em] text-sm uppercase mb-6">
+          Time Detective Agency — Classified Mission
         </div>
-      </div>
 
-      {/* Subtitle */}
-      <p className="text-slate-400 text-sm tracking-widest mb-10 text-center px-4">
-        FIX THE GLITCHES · RESTORE THE TIMELINE · UNCOVER HISTORY
-      </p>
+        {/* Giant title */}
+        <div className="flex-1 flex flex-col items-center justify-center">
+          <div className="relative w-full text-center mb-4 select-none">
+            {/* Shadow/glitch layer */}
+            <div className="absolute inset-0 pointer-events-none" style={{ animation: 'glitch 3s infinite' }}>
+              <div className="text-red-500/20 font-black leading-none"
+                style={{ fontSize: 'clamp(4rem, 12vw, 10rem)', letterSpacing: '-0.02em' }}>
+                CIVIL WAR
+              </div>
+              <div className="text-red-500/20 font-black leading-none"
+                style={{ fontSize: 'clamp(4rem, 12vw, 10rem)', letterSpacing: '-0.02em' }}>
+                REBOOT
+              </div>
+            </div>
 
-      {/* Mission brief */}
-      <div className="border border-slate-700 bg-slate-800/40 rounded-lg p-5 max-w-md w-full mx-4 mb-10">
-        <div className="text-[10px] font-bold text-amber-400 tracking-widest mb-3">⚠ MISSION BRIEFING</div>
-        <p className="text-slate-300 text-xs leading-relaxed">
-          Modern technology is glitching. Smartphones, GPS maps, legal documents —
-          all corrupted by a rip in the timeline. Your mission: travel back to
-          post-Civil War America, solve 5 historical puzzles, and restore history
-          before it's lost forever.
-        </p>
-        <div className="mt-3 grid grid-cols-3 gap-2 text-[10px]">
-          <div className="text-center border border-cyan-500/30 rounded p-1.5">
-            <div className="text-cyan-400 font-bold text-lg">5</div>
-            <div className="text-slate-500">Levels</div>
+            <h1 className="font-black leading-none neon-cyan text-cyan-400"
+              style={{ fontSize: 'clamp(4rem, 12vw, 10rem)', letterSpacing: '-0.02em' }}>
+              CIVIL WAR
+            </h1>
+            <h1 className="font-black leading-none neon-gold text-amber-400"
+              style={{ fontSize: 'clamp(4rem, 12vw, 10rem)', letterSpacing: '-0.02em' }}>
+              REBOOT
+            </h1>
           </div>
-          <div className="text-center border border-amber-500/30 rounded p-1.5">
-            <div className="text-amber-400 font-bold text-lg">550</div>
-            <div className="text-slate-500">Max Points</div>
+
+          <p className="text-slate-400 text-xl md:text-2xl tracking-widest text-center mb-12">
+            FIX THE GLITCHES &nbsp;·&nbsp; RESTORE THE TIMELINE &nbsp;·&nbsp; UNCOVER HISTORY
+          </p>
+
+          {/* Mission briefing — wide card */}
+          <div
+            className="w-full max-w-5xl border border-slate-700 rounded-2xl p-8 mb-10"
+            style={{ background: 'rgba(15,23,42,0.8)', backdropFilter: 'blur(4px)' }}
+          >
+            <div className="text-amber-400 text-sm font-bold tracking-widest mb-4 flex items-center gap-2">
+              <span className="animate-flicker">⚠</span> MISSION BRIEFING
+            </div>
+
+            <p className="text-slate-300 text-lg md:text-xl leading-relaxed mb-8">
+              Modern technology is <span className="text-red-400 font-bold">glitching</span>. Smartphones, GPS maps,
+              legal documents — all corrupted by a rip in the timeline. Your mission: travel back to
+              post-Civil War America, <span className="text-cyan-400 font-bold">solve 5 historical puzzles</span>,
+              and restore history before it's lost forever.
+            </p>
+
+            <div className="grid grid-cols-3 gap-6">
+              <div className="text-center border border-cyan-500/30 rounded-xl p-5 bg-cyan-500/5">
+                <div className="text-cyan-400 font-black mb-1" style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}>5</div>
+                <div className="text-slate-400 text-base tracking-wider">Levels</div>
+              </div>
+              <div className="text-center border border-amber-500/30 rounded-xl p-5 bg-amber-500/5">
+                <div className="text-amber-400 font-black mb-1" style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}>550</div>
+                <div className="text-slate-400 text-base tracking-wider">Max Points</div>
+              </div>
+              <div className="text-center border border-purple-500/30 rounded-xl p-5 bg-purple-500/5">
+                <div className="text-purple-400 font-black mb-1" style={{ fontSize: 'clamp(2rem, 5vw, 4rem)' }}>4</div>
+                <div className="text-slate-400 text-base tracking-wider">Ranks</div>
+              </div>
+            </div>
           </div>
-          <div className="text-center border border-purple-500/30 rounded p-1.5">
-            <div className="text-purple-400 font-bold text-lg">4</div>
-            <div className="text-slate-500">Ranks</div>
-          </div>
+
+          {/* Press Start */}
+          <button
+            onClick={() => { sounds.success(); onStart() }}
+            className={`
+              border-2 border-cyan-400 text-cyan-400 font-black rounded-2xl
+              hover:bg-cyan-400/10 active:scale-95 transition-all
+              tracking-[0.3em] uppercase
+              ${blink ? 'opacity-100' : 'opacity-30'}
+            `}
+            style={{ fontSize: 'clamp(1.1rem, 2.5vw, 1.8rem)', padding: '1.2rem 4rem' }}
+          >
+            ▶ &nbsp; PRESS START
+          </button>
         </div>
-      </div>
 
-      {/* Press start */}
-      <button
-        onClick={handleStart}
-        className={`px-10 py-3 border-2 border-cyan-400 text-cyan-400 font-bold text-sm tracking-[0.3em] rounded
-                    hover:bg-cyan-400/10 transition-all active:scale-95 border-neon-cyan
-                    ${blink ? 'opacity-100' : 'opacity-40'}`}
-      >
-        ▶ PRESS START
-      </button>
-
-      {/* Footer */}
-      <div className="absolute bottom-6 text-[10px] text-slate-700 tracking-widest">
-        HISTORY IS IN YOUR HANDS, DETECTIVE
+        <div className="text-center text-slate-700 text-sm tracking-widest mt-8">
+          HISTORY IS IN YOUR HANDS, DETECTIVE
+        </div>
       </div>
     </div>
   )

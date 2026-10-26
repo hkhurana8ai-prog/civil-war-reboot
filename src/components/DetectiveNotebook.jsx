@@ -8,12 +8,12 @@ const TAG_STYLES = {
 
 export default function DetectiveNotebook({ levels, unlockedClues, currentLevelId }) {
   return (
-    <aside className="w-72 flex-shrink-0 flex flex-col border border-slate-700 rounded-lg bg-[#1e293b] overflow-hidden border-neon-cyan">
-      <div className="px-4 py-2.5 border-b border-slate-700 bg-[#162032]">
-        <h2 className="text-xs font-bold tracking-widest text-cyan-400 neon-cyan">
+    <div className="flex flex-col h-full bg-[#0c1424]">
+      <div className="px-4 py-3 border-b border-slate-700 flex-shrink-0">
+        <h2 className="text-sm font-black tracking-widest text-cyan-400 neon-cyan">
           📒 DETECTIVE NOTEBOOK
         </h2>
-        <p className="text-[10px] text-slate-500 mt-0.5">Solve puzzles to unlock evidence</p>
+        <p className="text-xs text-slate-600 mt-1">Solve puzzles to unlock evidence</p>
       </div>
 
       <div className="flex-1 overflow-y-auto p-3 space-y-3">
@@ -23,40 +23,40 @@ export default function DetectiveNotebook({ levels, unlockedClues, currentLevelI
           return (
             <div
               key={lvl.id}
-              className={`rounded border p-3 transition-all duration-500
+              className={`rounded-xl border p-3 transition-all duration-500
                 ${unlocked
-                  ? 'border-green-500/40 bg-green-500/5 border-neon-green'
+                  ? 'border-green-500/40 bg-green-500/5'
                   : isCurrent
-                    ? 'border-cyan-500/40 bg-cyan-500/5 animate-pulse'
-                    : 'border-slate-700 bg-slate-800/30 opacity-50'
+                    ? 'border-cyan-500/40 bg-cyan-500/5'
+                    : 'border-slate-700/60 bg-slate-800/20 opacity-50'
                 }
               `}
             >
-              <div className="flex items-center justify-between mb-1.5">
-                <span className="text-[10px] font-bold text-slate-400 tracking-wider">
-                  LEVEL {lvl.id}
+              <div className="flex items-center justify-between mb-2">
+                <span className="text-xs font-bold text-slate-400 tracking-wider">
+                  LVL {lvl.id}
                 </span>
-                <span className={`text-[9px] font-bold px-1.5 py-0.5 rounded ${TAG_STYLES[lvl.clue.tag] || ''}`}>
+                <span className={`text-xs font-bold px-2 py-0.5 rounded ${TAG_STYLES[lvl.clue.tag] || ''}`}>
                   {lvl.clue.tag}
                 </span>
               </div>
 
               {unlocked ? (
                 <>
-                  <h3 className="text-xs font-bold text-white mb-1 leading-tight">
+                  <h3 className="text-sm font-black text-white mb-1.5 leading-snug">
                     {lvl.clue.headline}
                   </h3>
-                  <p className="text-[11px] text-slate-300 leading-relaxed">
+                  <p className="text-xs text-slate-300 leading-relaxed">
                     {lvl.clue.body}
                   </p>
-                  <div className="mt-2 text-[9px] text-green-400 font-bold tracking-widest">
+                  <div className="mt-2 text-xs text-green-400 font-bold tracking-wider">
                     ✓ EVIDENCE LOGGED
                   </div>
                 </>
               ) : (
                 <div className="text-center py-2">
                   <div className="text-2xl mb-1">🔒</div>
-                  <p className="text-[10px] text-slate-500">
+                  <p className="text-xs text-slate-500">
                     {isCurrent ? 'Solve this level to unlock' : `Complete Level ${lvl.id}`}
                   </p>
                 </div>
@@ -65,6 +65,6 @@ export default function DetectiveNotebook({ levels, unlockedClues, currentLevelI
           )
         })}
       </div>
-    </aside>
+    </div>
   )
 }

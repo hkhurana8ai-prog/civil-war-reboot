@@ -30,24 +30,24 @@ const RANK_ICONS = {
   'Master Detective':  '🏆',
 }
 
-export default function Header({ currentLevel, totalLevels, score, rank, solvedLevels, replayMode, onSelectLevel }) {
+export default function Header({ currentLevel, score, rank, solvedLevels, replayMode, onSelectLevel }) {
   const maxUnlocked = solvedLevels.length > 0
     ? Math.max(...solvedLevels.map(id => LEVELS.findIndex(l => l.id === id)))
     : -1
 
   return (
-    <header className="border-b border-slate-700 bg-[#0c1424] px-4 py-2.5 flex items-center justify-between gap-4 flex-wrap flex-shrink-0">
+    <header className="border-b-2 border-slate-700 bg-[#080e1c] px-6 py-3 flex items-center justify-between gap-6 flex-shrink-0">
       {/* Title */}
       <div className="flex flex-col">
-        <h1 className="text-base font-black tracking-widest neon-cyan text-cyan-400 leading-tight">
+        <h1 className="text-2xl font-black tracking-widest neon-cyan text-cyan-400 leading-tight">
           ⚡ CIVIL WAR REBOOT
         </h1>
-        <span className="text-[9px] text-slate-600 tracking-wider uppercase">Time Detective Agency</span>
+        <span className="text-xs text-slate-600 tracking-wider uppercase mt-0.5">Time Detective Agency</span>
       </div>
 
-      {/* Level pills */}
-      <div className="flex gap-1.5 flex-wrap items-center">
-        <span className="text-[9px] text-slate-600 mr-1 tracking-wider hidden sm:block">LEVELS:</span>
+      {/* Level selector pills */}
+      <div className="flex gap-2 items-center">
+        <span className="text-xs text-slate-600 tracking-wider hidden sm:block mr-1">LEVELS:</span>
         {LEVELS.map((lvl, i) => {
           const solved = solvedLevels.includes(lvl.id)
           const active = i === currentLevel
@@ -57,14 +57,14 @@ export default function Header({ currentLevel, totalLevels, score, rank, solvedL
               key={lvl.id}
               onClick={() => { if (unlocked) { sounds.click(); onSelectLevel(i) } }}
               title={`Level ${lvl.id}: ${lvl.title}`}
-              className={`w-8 h-8 text-[11px] rounded border font-bold transition-all
+              className={`w-10 h-10 text-sm rounded-lg border-2 font-black transition-all
                 ${active
-                  ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10 scale-110'
+                  ? 'border-cyan-400 text-cyan-400 bg-cyan-400/10 scale-110 shadow-lg'
                   : solved
-                    ? 'border-green-500/60 text-green-400 bg-green-500/5'
+                    ? 'border-green-500/70 text-green-400 bg-green-500/5'
                     : 'border-slate-700 text-slate-600 bg-transparent'
                 }
-                ${unlocked ? 'cursor-pointer hover:opacity-80' : 'cursor-not-allowed opacity-30'}
+                ${unlocked ? 'cursor-pointer hover:opacity-80' : 'cursor-not-allowed opacity-25'}
               `}
             >
               {solved ? '✓' : lvl.id}
@@ -74,16 +74,16 @@ export default function Header({ currentLevel, totalLevels, score, rank, solvedL
       </div>
 
       {/* Score + Rank */}
-      <div className="flex items-center gap-4">
+      <div className="flex items-center gap-6">
         <div className="text-right">
-          <div className="text-[9px] text-slate-600 tracking-widest uppercase">Score</div>
-          <div className="text-xl font-black neon-gold text-amber-400 leading-tight">
+          <div className="text-xs text-slate-600 tracking-widest uppercase">Score</div>
+          <div className="text-3xl font-black neon-gold text-amber-400 leading-tight">
             <AnimatedScore score={score} />
           </div>
         </div>
-        <div className="border-l border-slate-700 pl-4 text-right">
-          <div className="text-[9px] text-slate-600 tracking-widest uppercase">Rank</div>
-          <div className={`text-xs font-bold ${rank.color} tracking-wide flex items-center gap-1`}>
+        <div className="border-l-2 border-slate-700 pl-6 text-right">
+          <div className="text-xs text-slate-600 tracking-widest uppercase">Rank</div>
+          <div className={`text-base font-black ${rank.color} tracking-wide flex items-center gap-2 justify-end`}>
             <span>{RANK_ICONS[rank.label]}</span>
             <span>{rank.label}</span>
           </div>

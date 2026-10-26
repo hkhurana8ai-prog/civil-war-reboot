@@ -35,12 +35,26 @@ export default {
         pulse_gold: {
           '0%, 100%': { boxShadow: '0 0 6px #f59e0b' },
           '50%': { boxShadow: '0 0 20px #f59e0b' },
+        },
+        shake: {
+          '0%, 100%': { transform: 'translateX(0)' },
+          '20%':       { transform: 'translateX(-6px)' },
+          '40%':       { transform: 'translateX(6px)' },
+          '60%':       { transform: 'translateX(-6px)' },
+          '80%':       { transform: 'translateX(6px)' },
+        },
+        pop: {
+          '0%':   { transform: 'scale(1)' },
+          '50%':  { transform: 'scale(1.15)' },
+          '100%': { transform: 'scale(1)' },
         }
       },
       animation: {
-        glitch: 'glitch 0.4s infinite',
-        flicker: 'flicker 1.2s ease-in-out infinite',
+        glitch:     'glitch 0.4s infinite',
+        flicker:    'flicker 1.2s ease-in-out infinite',
         pulse_gold: 'pulse_gold 1.5s ease-in-out infinite',
+        shake:      'shake 0.4s ease',
+        pop:        'pop 0.2s ease',
       }
     },
   },

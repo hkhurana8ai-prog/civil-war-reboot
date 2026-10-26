@@ -9,6 +9,7 @@ import VictoryScreen from './components/VictoryScreen'
 export default function App() {
   const [started, setStarted] = useState(false)
   const [state, setState] = useState(getInitialState)
+  const [notebookOpen, setNotebookOpen] = useState(true)
 
   const handleLevelSolved = useCallback((levelId, pointsEarned) => {
     setState(prev => {
@@ -19,7 +20,6 @@ export default function App() {
         ? prev.unlockedClues
         : [...prev.unlockedClues, levelId]
       const allDone = newSolved.length === TOTAL_LEVELS
-
       return {
         ...prev,
         score: newScore,
@@ -47,9 +47,7 @@ export default function App() {
     setStarted(true)
   }, [])
 
-  if (!started) {
-    return <SplashScreen onStart={() => setStarted(true)} />
-  }
+  if (!started) return <SplashScreen onStart={() => setStarted(true)} />
 
   const currentLevelData = LEVELS[state.currentLevel]
   const rank = getRank(state.score)
@@ -69,10 +67,9 @@ export default function App() {
   }
 
   return (
-    <div className="min-h-screen bg-[#0f172a] text-white font-mono flex flex-col" style={{ maxHeight: '100vh' }}>
+    <div className="h-screen bg-[#0f172a] text-white font-mono flex flex-col overflow-hidden">
       <Header
         currentLevel={state.currentLevel}
-        totalLevels={TOTAL_LEVELS}
         score={state.score}
         rank={rank}
         solvedLevels={state.solvedLevels}
@@ -80,21 +77,43 @@ export default function App() {
         onSelectLevel={handleSelectLevel}
       />
 
-      <main className="flex flex-1 gap-4 p-4 overflow-hidden">
-        <GlitchStage
-          levelData={currentLevelData}
-          isSolved={isSolved}
-          onSolved={(pts) => handleLevelSolved(currentLevelData.id, pts)}
-          onNextLevel={handleNextLevel}
-          isLastLevel={state.currentLevel === TOTAL_LEVELS - 1}
-          allDone={allDone}
-          onViewResults={() => setState(prev => ({ ...prev, screen: 'victory' }))}
-        />
-        <DetectiveNotebook
-          levels={LEVELS}
-          unlockedClues={state.unlockedClues}
-          currentLevelId={currentLevelData.id}
-        />
+      <main className="flex flex-1 overflow-hidden relative">
+        {/* Main game area */}
+        <div className={`flex-1 overflow-hidden transition-all duration-300 ${notebookOpen ? '' : 'w-full'}`}>
+          <GlitchStage
+            levelData={currentLevelData}
+            isSolved={isSolved}
+            onSolved={(pts) => handleLevelSolved(currentLevelData.id, pts)}
+            onNextLevel={handleNextLevel}
+            isLastLevel={state.currentLevel === TOTAL_LEVELS - 1}
+            allDone={allDone}
+            onViewResults={() => setState(prev => ({ ...prev, screen: 'victory' }))}
+          />
+        </div>
+
+        {/* Notebook toggle tab */}
+        <button
+          onClick={() => setNotebookOpen(o => !o)}
+          className="absolute right-0 top-1/2 -translate-y-1/2 z-20 bg-slate-800 border border-slate-700 border-r-0 rounded-l-lg px-1 py-4 text-slate-400 hover:text-cyan-400 hover:border-cyan-500/40 transition-all"
+          style={{ right: notebookOpen ? '17rem' : 0 }}
+          title={notebookOpen ? 'Hide notebook' : 'Show notebook'}
+        >
+          <span className="text-xs" style={{ writingMode: 'vertical-rl' }}>
+            {notebookOpen ? '▶ NOTEBOOK' : '◀ NOTEBOOK'}
+          </span>
+        </button>
+
+        {/* Detective Notebook — collapsible */}
+        <div className={`flex-shrink-0 border-l border-slate-700 transition-all duration-300 overflow-hidden ${notebookOpen ? 'w-68' : 'w-0'}`}
+          style={{ width: notebookOpen ? '17rem' : 0 }}>
+          {notebookOpen && (
+            <DetectiveNotebook
+              levels={LEVELS}
+              unlockedClues={state.unlockedClues}
+              currentLevelId={currentLevelData.id}
+            />
+          )}
+        </div>
       </main>
     </div>
   )
